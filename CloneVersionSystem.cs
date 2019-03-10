@@ -43,7 +43,7 @@ namespace Clones
                 programs = new ItemsStack<string>();
                 cancells = new ItemsStack<string>();
             }
-
+            /*
             public Clone(Clone clonedItem)
             {
                 programs = new ItemsStack<string>();
@@ -61,8 +61,14 @@ namespace Clones
                     item = item.Next;
                 }
             }
+            */
 
-                public void Learning(string program)
+            public Clone(Clone clonedItem)
+            {
+                programs = new ItemsStack<string>() { head = clonedItem.programs.head , tail = clonedItem.programs.tail };
+                cancells = new ItemsStack<string>() { head = clonedItem.cancells.head, tail = clonedItem.cancells.tail };
+            }
+            public void Learning(string program)
             {
                 programs.Push(program);
                 while(cancells.Count!=0)
@@ -81,10 +87,11 @@ namespace Clones
 
             public string Checking()
             {
-                if (programs.Count == 0)
+                if (programs.head==null)
                     return "basic";
                 else
-                    { var temp = programs.Pop();
+                    {
+                    var temp = programs.Pop();
                     programs.Push(temp);
                     return temp;
                 }
