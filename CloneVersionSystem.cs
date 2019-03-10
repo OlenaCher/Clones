@@ -5,73 +5,76 @@ namespace Clones
 {
 	public class CloneVersionSystem : ICloneVersionSystem
 	{
-        private List<Clone> ClonesList = new List<Clone>();
+        private List<Clone> clonesList = new List<Clone>();
         public string Execute(string query)
 		{
-            if (ClonesList.Count == 0) ClonesList.Add(new Clone());
+            if (clonesList.Count == 0) clonesList.Add(new Clone());
             var commandArr = query.Split(' ');
             var command = commandArr[0];
             var cloneIndex =Convert.ToInt32(commandArr[1])-1;
             switch (command)
             {
                 case "learn":
-                    ClonesList[cloneIndex].Learning(commandArr[2]);
+                    clonesList[cloneIndex].Learn(commandArr[2]);
                     break;
                 case "rollback":
-                    ClonesList[cloneIndex].Rollback();
+                    clonesList[cloneIndex].Rollback();
                     break;
                 case "relearn":
-                    ClonesList[cloneIndex].Relearn();
+                    clonesList[cloneIndex].Relearn();
                     break;
                 case "clone":
-                    ClonesList.Add(new Clone(ClonesList[cloneIndex]));
+                    clonesList.Add(new Clone(clonesList[cloneIndex]));
                     break;
                 case "check":
-                    return ClonesList[cloneIndex].Checking();
+                    return clonesList[cloneIndex].Check();
             }
 			return null;
 		}
         
         public class Clone
         {
-            public ItemsStack<string> programs;
-            public ItemsStack<string> cancells;
+            public ItemsStack<string> Programs;
+            public ItemsStack<string> Cancells;
 
             public Clone()
             {
-                programs = new ItemsStack<string>();
-                cancells = new ItemsStack<string>();
+                Programs = new ItemsStack<string>();
+                Cancells = new ItemsStack<string>();
             }
  
             public Clone(Clone clonedItem)
             {
-                programs = new ItemsStack<string>() { head = clonedItem.programs.head , tail = clonedItem.programs.tail };
-                cancells = new ItemsStack<string>() { head = clonedItem.cancells.head, tail = clonedItem.cancells.tail };
+                Programs = new ItemsStack<string>()
+                    { Head = clonedItem.Programs.Head , Tail = clonedItem.Programs.Tail };
+                Cancells = new ItemsStack<string>()
+                    { Head = clonedItem.Cancells.Head, Tail = clonedItem.Cancells.Tail };
             }
-            public void Learning(string program)
+
+            public void Learn(string program)
             {
-                programs.Push(program);
-                cancells=new ItemsStack<string>();
+                Programs.Push(program);
+                Cancells=new ItemsStack<string>();
             }
 
             public void Rollback()
             {
-                cancells.Push(programs.Pop());
+                Cancells.Push(Programs.Pop());
             }
 
             public void Relearn()
             {
-                programs.Push(cancells.Pop());
+                Programs.Push(Cancells.Pop());
             }
 
-            public string Checking()
+            public string Check()
             {
-                if (programs.head==null)
+                if (Programs.Head==null)
                     return "basic";
                 else
-                    {
-                    var temp = programs.Pop();
-                    programs.Push(temp);
+                {
+                    var temp = Programs.Pop();
+                    Programs.Push(temp);
                     return temp;
                 }
             }
@@ -87,37 +90,31 @@ namespace Clones
 
     public class ItemsStack<T>
     {
-        public Items<T> head;
-        public Items<T> tail;
+        public Items<T> Head;
+        public Items<T> Tail;
 
 
         public void Push(T item)
         {
-            if (head == null)
-                tail = head = new Items<T> { Value = item, Next = null, Prew = null };
+            if (Head == null)
+                Tail = Head = new Items<T> { Value = item, Next = null, Prew = null };
             else
             {
-                var newItem = new Items<T> { Value = item, Next = null, Prew = tail };
-                tail.Next = newItem;
-                tail = newItem;
+                var newItem = new Items<T> { Value = item, Next = null, Prew = Tail };
+                Tail.Next = newItem;
+                Tail = newItem;
             }
-        }
-
-        private void DeleteExtraItem()
-        {
-            head = head.Next;
-            head.Prew = null;
         }
 
         public T Pop()
         {
-            if (tail == null) return default(T);
-            var result = tail.Value;
-            tail = tail.Prew;
-            if (tail == null)
-                head = null;
+            if (Tail == null) return default(T);
+            var result = Tail.Value;
+            Tail = Tail.Prew;
+            if (Tail == null)
+                Head = null;
             else
-                tail.Next = null;
+                Tail.Next = null;
             return result;
         }
     }
