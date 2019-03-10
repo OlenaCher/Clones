@@ -47,32 +47,19 @@ namespace Clones
             public Clone(Clone clonedItem)
             {
                 programs = new ItemsStack<string>();
-
-                var item = new Items<string>();
-                item = clonedItem.programs.tail;
-                programs.tail = item;
-                //   programs.head = new Items<string>();
-                //   programs.head = clonedItem.programs.head;
-                // programs.head = new Items<string>() { Value = clonedItem.programs.head.Value, Prew = null, Next = clonedItem.programs.head.Next };
-                // programs.head=  clonedItem.programs.head;
-                // programs.tail = clonedItem.programs.tail;
-                //  programs.tail = clonedItem.programs.tail;
-
-                /*for (var i = 0; i < clonedItem.programs.Count; i++)
-                 {
+                var item = clonedItem.programs.head;
+                for (var i = 0; i < clonedItem.programs.Count; i++)
+                {
                     programs.Push(item.Value);
-                     item = item.Next;
-                 }
-                 */
+                    item = item.Next;
+                }
                 cancells = new ItemsStack<string>();
-               //       var item = clonedItem.cancells.head;
-              //  cancells.head = clonedItem.cancells.head;
-                //  item = clonedItem.cancells.head;
-                //   for (var i = 0; i < clonedItem.cancells.Count; i++)
-               //   {
-               //        cancells.Push(item.Value);
-               //         item = item.Next;
-               //   }
+                item = clonedItem.cancells.head;
+                for (var i = 0; i < clonedItem.cancells.Count; i++)
+                {
+                    cancells.Push(item.Value);
+                    item = item.Next;
+                }
             }
 
                 public void Learning(string program)
@@ -147,6 +134,13 @@ namespace Clones
                 tail = newItem;
             }
             counter++;
+        }
+
+        private void DeleteExtraItem()
+        {
+            head = head.Next;
+            head.Prew = null;
+            counter--;
         }
 
         public T Pop()
