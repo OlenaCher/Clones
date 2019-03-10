@@ -25,10 +25,9 @@ namespace Clones
                     break;
                 case "clone":
                     ClonesList.Add(new Clone(ClonesList[cloneIndex]));
-                    return null;
+                    break;
                 case "check":
-                    var program = ClonesList[cloneIndex].Checking();
-                    return program;
+                    return ClonesList[cloneIndex].Checking();
             }
 			return null;
 		}
@@ -43,26 +42,7 @@ namespace Clones
                 programs = new ItemsStack<string>();
                 cancells = new ItemsStack<string>();
             }
-            /*
-            public Clone(Clone clonedItem)
-            {
-                programs = new ItemsStack<string>();
-                var item = clonedItem.programs.head;
-                for (var i = 0; i < clonedItem.programs.Count; i++)
-                {
-                    programs.Push(item.Value);
-                    item = item.Next;
-                }
-                cancells = new ItemsStack<string>();
-                item = clonedItem.cancells.head;
-                for (var i = 0; i < clonedItem.cancells.Count; i++)
-                {
-                    cancells.Push(item.Value);
-                    item = item.Next;
-                }
-            }
-            */
-
+ 
             public Clone(Clone clonedItem)
             {
                 programs = new ItemsStack<string>() { head = clonedItem.programs.head , tail = clonedItem.programs.tail };
@@ -71,8 +51,7 @@ namespace Clones
             public void Learning(string program)
             {
                 programs.Push(program);
-                while(cancells.Count!=0)
-                cancells.Pop();
+                cancells=new ItemsStack<string>();
             }
 
             public void Rollback()
@@ -95,27 +74,9 @@ namespace Clones
                     programs.Push(temp);
                     return temp;
                 }
-
             }
         }
    	}
-
-    /*
-    public class ItemsStack<T> : LinkedList<T>
-    {
-        public void Push(T item)
-        {
-            AddLast(item);
-        }
-       
-        public T Pop()
-        {
-            var result = Last.Value;
-            RemoveLast();
-            return result;
-        }
-    }
-    */
 
     public class Items<T>
     {
@@ -128,7 +89,7 @@ namespace Clones
     {
         public Items<T> head;
         public Items<T> tail;
-        int counter;
+
 
         public void Push(T item)
         {
@@ -140,14 +101,12 @@ namespace Clones
                 tail.Next = newItem;
                 tail = newItem;
             }
-            counter++;
         }
 
         private void DeleteExtraItem()
         {
             head = head.Next;
             head.Prew = null;
-            counter--;
         }
 
         public T Pop()
@@ -159,16 +118,7 @@ namespace Clones
                 head = null;
             else
                 tail.Next = null;
-            counter--;
             return result;
-        }
-
-        public int Count
-        {
-            get
-            {
-                return counter;
-            }
         }
     }
 }
